@@ -350,3 +350,75 @@ class PlaybackRangeArgs(BaseModel):
     frame_end: Optional[int] = Field(default=None, description="End frame of playback")
     frame_current: Optional[int] = Field(default=None, description="Current playhead frame")
     fps: Optional[int] = Field(default=None, description="Playback frames per second")
+
+
+# Phase 6: Physics & Simulation
+class ConfigureRigidbodyArgs(BaseModel):
+    name: str = Field(description="Target object name")
+    type: str = Field(default="ACTIVE", description="Rigid body type: 'ACTIVE' or 'PASSIVE'")
+    mass: Optional[float] = Field(default=None, gt=0.0, description="Mass in kg")
+    friction: Optional[float] = Field(default=None, ge=0.0, le=1.0, description="Surface friction")
+    restitution: Optional[float] = Field(default=None, ge=0.0, le=1.0, description="Bounciness/restitution")
+    collision_shape: Optional[str] = Field(
+        default=None,
+        description="Collision shape: 'BOX', 'SPHERE', 'CAPSULE', 'CYLINDER', 'CONE', 'CONVEX_HULL', 'MESH'",
+    )
+    kinematic: Optional[bool] = Field(default=None, description="Whether movement is controlled by keyframes/animation")
+    enabled: Optional[bool] = Field(default=None, description="Whether rigid body simulation is active on this object")
+
+
+class ConfigureClothArgs(BaseModel):
+    name: str = Field(description="Target object name")
+    mass: Optional[float] = Field(default=None, gt=0.0, description="Cloth vertex mass in kg")
+    tension_stiffness: Optional[float] = Field(default=None, ge=0.0, description="Tension stiffness")
+    compression_stiffness: Optional[float] = Field(default=None, ge=0.0, description="Compression stiffness")
+    shear_stiffness: Optional[float] = Field(default=None, ge=0.0, description="Shear stiffness")
+    bending_stiffness: Optional[float] = Field(default=None, ge=0.0, description="Bending stiffness")
+    shrink_factor: Optional[float] = Field(default=None, description="Shrink/expansion factor")
+    use_collision: Optional[bool] = Field(default=None, description="Enable self/object collisions")
+
+
+class InspectPhysicsArgs(BaseModel):
+    name: str = Field(description="Target object name to inspect physics settings")
+
+
+class BakeSimulationArgs(BaseModel):
+    simulation_type: str = Field(default="RIGIDBODY", description="Simulation type to bake: 'RIGIDBODY', 'ALL'")
+    frame_start: Optional[int] = Field(default=None, description="Start frame for cache")
+    frame_end: Optional[int] = Field(default=None, description="End frame for cache")
+
+
+# Phase 6: Rendering & Compositing
+class ConfigureRenderArgs(BaseModel):
+    engine: Optional[str] = Field(
+        default=None,
+        description="Render engine: 'CYCLES', 'BLENDER_EEVEE_NEXT', 'BLENDER_EEVEE', 'BLENDER_WORKBENCH'",
+    )
+    resolution_x: Optional[int] = Field(default=None, gt=0, description="Horizontal pixel resolution")
+    resolution_y: Optional[int] = Field(default=None, gt=0, description="Vertical pixel resolution")
+    resolution_percentage: Optional[int] = Field(default=None, ge=1, le=100, description="Render scale percentage (1-100)")
+    samples: Optional[int] = Field(default=None, ge=1, description="Render samples")
+    file_format: Optional[str] = Field(default=None, description="Output image format: 'PNG', 'JPEG', 'OPEN_EXR'")
+    color_mode: Optional[str] = Field(default=None, description="Color mode: 'RGB', 'RGBA', 'BW'")
+    filepath: Optional[str] = Field(default=None, description="Default render output filepath")
+    transparent_background: Optional[bool] = Field(default=None, description="Render with transparent film background")
+
+
+class RenderPreviewArgs(BaseModel):
+    output_path: Optional[str] = Field(default=None, description="Optional target image file path")
+    resolution_percentage: int = Field(default=50, ge=1, le=100, description="Scale percentage for fast preview")
+    samples: Optional[int] = Field(default=16, ge=1, description="Samples for preview render")
+    write_image: bool = Field(default=True, description="Save preview image to disk")
+
+
+class InspectCompositorArgs(BaseModel):
+    pass
+
+
+class ConfigureCompositorArgs(BaseModel):
+    use_nodes: bool = Field(default=True, description="Enable compositing nodes in scene")
+    add_node_type: Optional[str] = Field(
+        default=None,
+        description="Node type to add, e.g. 'CompositorNodeDenoise', 'CompositorNodeBlur', 'CompositorNodeGlare'",
+    )
+    node_name: Optional[str] = Field(default=None, description="Optional name for added node")

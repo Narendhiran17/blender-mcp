@@ -92,3 +92,15 @@ OP_ANIMATION_CREATE_KEYFRAME = "animation.create_keyframe"
 OP_ANIMATION_INSPECT = "animation.inspect"
 OP_ANIMATION_CONFIGURE = "animation.configure"
 OP_ANIMATION_PLAYBACK_RANGE = "animation.playback_range"
+
+# Phase 6 Simulation and Rendering Operations
+OP_PHYSICS_RIGIDBODY = "physics.configure_rigidbody"
+OP_PHYSICS_CLOTH = "physics.configure_cloth"
+OP_PHYSICS_INSPECT = "physics.inspect"
+OP_SIMULATION_BAKE = "simulation.bake"
+
+OP_RENDER_CONFIGURE = "render.configure"
+OP_RENDER_PREVIEW = "render.preview"
+OP_RENDER_STATUS = "render.status"
+OP_COMPOSITOR_INSPECT = "compositor.inspect"
+OP_COMPOSITOR_CONFIGURE = "compositor.configure"

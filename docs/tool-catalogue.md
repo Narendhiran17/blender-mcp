@@ -1,6 +1,6 @@
 # Blender AI Control MCP — Tool Catalogue
 
-Complete reference for all 62 MCP tools exposed by the **Blender AI Control MCP Server**.
+Complete reference for all 71 MCP tools exposed by the **Blender AI Control MCP Server**.
 
 ---
 
@@ -451,3 +451,79 @@ Complete reference for all 62 MCP tools exposed by the **Blender AI Control MCP 
   * `frame_current` *(integer, optional)*: Playhead frame.
   * `fps` *(integer, optional)*: Playback frames per second.
 * **Returns:** Current timeline state, total frames, and duration in seconds.
+
+---
+
+## 10. Physics & Simulation Tools (4)
+
+### `blender_configure_rigidbody`
+* **Description:** Add or configure rigid body physics on an object (mass, friction, restitution, shape, active/passive).
+* **Arguments:**
+  * `name` *(string, required)*: Object name.
+  * `type` *(string, default "ACTIVE")*: `"ACTIVE"` or `"PASSIVE"`.
+  * `mass` *(float, optional)*: Mass in kg.
+  * `friction` *(float, optional)*: Surface friction (0.0 to 1.0).
+  * `restitution` *(float, optional)*: Bounciness (0.0 to 1.0).
+  * `collision_shape` *(string, optional)*: `"BOX"`, `"SPHERE"`, `"CAPSULE"`, `"CYLINDER"`, `"CONE"`, `"CONVEX_HULL"`, `"MESH"`.
+  * `kinematic` *(boolean, optional)*: Motion driven by keyframes.
+  * `enabled` *(boolean, optional)*: Enable or disable simulation on object.
+
+### `blender_configure_cloth`
+* **Description:** Add or configure cloth simulation modifier on an object (mass, tension, compression, shear, bending stiffness, collisions).
+* **Arguments:**
+  * `name` *(string, required)*: Object name.
+  * `mass` *(float, optional)*: Vertex mass in kg.
+  * `tension_stiffness`, `compression_stiffness`, `shear_stiffness`, `bending_stiffness` *(float, optional)*: Stiffness parameters.
+  * `shrink_factor` *(float, optional)*: Shrink / expansion factor.
+  * `use_collision` *(boolean, optional)*: Enable cloth collisions.
+
+### `blender_inspect_physics`
+* **Description:** Inspect all physics systems active on an object (rigid body, cloth, collision, particle systems).
+* **Arguments:**
+  * `name` *(string, required)*: Object name.
+
+### `blender_bake_simulation`
+* **Description:** Configure or bake simulation cache frame range (e.g. `"RIGIDBODY"`).
+* **Arguments:**
+  * `simulation_type` *(string, default "RIGIDBODY")*: Simulation cache type.
+  * `frame_start` *(integer, optional)*: Start frame.
+  * `frame_end` *(integer, optional)*: End frame.
+
+---
+
+## 11. Rendering & Compositing Tools (5)
+
+### `blender_configure_render`
+* **Description:** Configure render engine (`CYCLES`, `BLENDER_EEVEE_NEXT`, `BLENDER_EEVEE`, `WORKBENCH`), resolution, samples, output format (`PNG`, `JPEG`, `OPEN_EXR`), color mode, and transparent background.
+* **Arguments:**
+  * `engine` *(string, optional)*: Render engine identifier.
+  * `resolution_x`, `resolution_y` *(integer, optional)*: Pixel resolution.
+  * `resolution_percentage` *(integer, optional)*: Percentage scale (1-100).
+  * `samples` *(integer, optional)*: Render samples.
+  * `file_format` *(string, optional)*: Image format.
+  * `color_mode` *(string, optional)*: `"RGB"`, `"RGBA"`, or `"BW"`.
+  * `filepath` *(string, optional)*: Output filepath (validated against path policy).
+  * `transparent_background` *(boolean, optional)*: Film transparency.
+
+### `blender_render_preview`
+* **Description:** Render a fast still image preview of the current frame and return output filepath, dimensions, file size, and render duration.
+* **Arguments:**
+  * `output_path` *(string, optional)*: Custom output path or safe temp directory if omitted.
+  * `resolution_percentage` *(integer, default 50)*: Fast preview resolution percentage.
+  * `samples` *(integer, default 16)*: Fast preview sample count.
+  * `write_image` *(boolean, default true)*: Save image file to disk.
+
+### `blender_render_status`
+* **Description:** Retrieve current render configuration, active camera, resolution, and timeline settings.
+* **Arguments:** None
+
+### `blender_inspect_compositor`
+* **Description:** Inspect the scene compositor node tree, active nodes, inputs, outputs, and links.
+* **Arguments:** None
+
+### `blender_configure_compositor`
+* **Description:** Enable/disable scene compositing nodes and add nodes (e.g. `'CompositorNodeDenoise'`, `'CompositorNodeGlare'`).
+* **Arguments:**
+  * `use_nodes` *(boolean, default true)*: Enable scene compositing nodes.
+  * `add_node_type` *(string, optional)*: Node type to create.
+  * `node_name` *(string, optional)*: Custom name for added node.
