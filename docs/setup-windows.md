@@ -18,7 +18,7 @@ This guide describes how to set up, install, and run **Blender AI Control MCP** 
 Open PowerShell in the project directory:
 
 ```powershell
-cd "c:\Users\naren\OneDrive\Desktop\blender MCP"
+cd "C:\path\to\blender-mcp"
 
 # Create virtual environment with Python 3.11
 & "C:\Program Files\Python311\python.exe" -m venv .venv
@@ -72,7 +72,7 @@ Add the following to your MCP client configuration (such as `claude_desktop_conf
 {
   "mcpServers": {
     "blender": {
-      "command": "c:\\Users\\naren\\OneDrive\\Desktop\\blender MCP\\.venv\\Scripts\\python.exe",
+      "command": "C:\\path\\to\\blender-mcp\\.venv\\Scripts\\python.exe",
       "args": [
         "-m",
         "mcp_server.main"
@@ -85,6 +85,7 @@ Add the following to your MCP client configuration (such as `claude_desktop_conf
   }
 }
 ```
+*(Replace `C:\path\to\blender-mcp` with your actual project location).*
 
 ---
 

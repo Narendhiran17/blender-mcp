@@ -81,11 +81,12 @@ pip install pytest pytest-asyncio ruff mypy
 
 Add this server to your client configuration (e.g. Claude Desktop `claude_desktop_config.json`, Cursor, or Antigravity):
 
+### Windows
 ```json
 {
   "mcpServers": {
     "blender": {
-      "command": "C:\\Users\\naren\\OneDrive\\Desktop\\blender MCP\\.venv\\Scripts\\python.exe",
+      "command": "C:\\path\\to\\blender-mcp\\.venv\\Scripts\\python.exe",
       "args": ["-m", "mcp_server.main"],
       "env": {
         "BLENDER_BRIDGE_HOST": "127.0.0.1",
@@ -95,6 +96,23 @@ Add this server to your client configuration (e.g. Claude Desktop `claude_deskto
   }
 }
 ```
+
+### macOS / Linux
+```json
+{
+  "mcpServers": {
+    "blender": {
+      "command": "/path/to/blender-mcp/.venv/bin/python",
+      "args": ["-m", "mcp_server.main"],
+      "env": {
+        "BLENDER_BRIDGE_HOST": "127.0.0.1",
+        "BLENDER_BRIDGE_PORT": "8765"
+      }
+    }
+  }
+}
+```
+*(Replace `C:\path\to\blender-mcp` or `/path/to/blender-mcp` with the actual path to your cloned repository).*
 
 ---
 
