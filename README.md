@@ -2,26 +2,53 @@
 
 > Structured, secure, local-first Model Context Protocol (MCP) server and Blender add-on for AI-driven 3D workflows.
 
-[![Tests](https://img.shields.io/badge/tests-13%20passed-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/tests-35%20passed-brightgreen.svg)]()
+[![Tools](https://img.shields.io/badge/MCP%20tools-74%20registered-blue.svg)]()
 [![Blender](https://img.shields.io/badge/Blender-4.0%2B-orange.svg)]()
 [![Python](https://img.shields.io/badge/Python-3.11%2B-blue.svg)]()
 [![MCP](https://img.shields.io/badge/MCP-2.0-purple.svg)]()
 
 ---
 
-## Features (Phase 1 Ready)
+## Overview
 
-* **MCP 2.0 Compliant:** Built on the official MCP Python SDK (`mcp`). Exposes tools, resources, and reusable workflow prompts over standard I/O (`stdio`).
-* **Thread-Safe Blender Integration:** Bridge HTTP server safely receives requests on background threads and dispatches `bpy` calls on Blender's main thread via a persistent timer queue.
-* **Localhost-Only Security:** Binds to `127.0.0.1` only with constant-time token validation.
-* **No Arbitrary Code Execution:** Strictly typed, allowlisted domain operations.
-* **Core Tools Included:**
-  * `blender_health`: Check bridge health and connectivity.
-  * `blender_status`: Inspect live Blender state, active scene, objects, and engine.
-  * `blender_version`: Read Blender release and platform metadata.
-  * `blender_create_primitive`: Create 3D primitives (Cube, Sphere, Cylinder, Plane, Cone, Torus) with location, rotation, scale, and size.
-  * `blender_inspect_object`: Inspect vertex, polygon, and edge counts, dimensions, materials, and modifiers.
-  * `blender_list_objects`: Retrieve inventory of objects in the active scene.
+**Blender AI Control MCP** provides complete, thread-safe, allowlisted AI control over Blender 3D without direct code execution (`eval`/`exec`). It implements 74 structured MCP tools across 13 functional domains, connecting AI assistants (Antigravity, Claude Desktop, Cursor, etc.) directly to a live Blender session.
+
+### Complete 13 Functional Domains (74 Tools):
+1. **System & Connection (3 tools):** Health check, real-time Blender project status, build version.
+2. **Scene & Collections (8 tools):** Scene list, inspect, create, switch active, save `.blend`, collections hierarchy and object linking.
+3. **Object Transforms & Hierarchy (7 tools):** Primitives (Cube, Sphere, Cylinder, Plane, Cone, Torus), rename, transform, duplicate, delete, parenting with inverse matrix preservation, visibility and selection.
+4. **Mesh Modeling & Editing (8 tools):** Headless `bmesh` inspection, subdivide, bevel, extrude, merge, recalculate normals, shade smooth, geometric validation.
+5. **Modifiers (6 tools):** List modifiers, add, configure, apply, remove, reorder stack.
+6. **Materials, Textures & UVs (9 tools):** Principled BSDF creation & configuration, slot assignment, inspection, image texture linking, UV unwrapping (Smart, Cube, Sphere, Cylinder).
+7. **Lighting, Cameras & Environment (7 tools):** Point/Sun/Spot/Area lights, cameras with focal length/clipping, active camera switching, world background illumination & HDRIs, environment inspection.
+8. **Geometry Nodes (4 tools):** Node group listing, inspect sockets & overrides, assign modifier & create procedural passthrough groups, configure input parameters.
+9. **Armatures & Rigging (4 tools):** Armature creation, bone hierarchy inspection, bone editing in edit mode, auto-weight mesh skinning.
+10. **Animation & Timeline (4 tools):** Frame keyframing on location/rotation/scale, action & F-curve inspection, interpolation setting (Bezier, Linear, Constant), scene playback range & framerate.
+11. **Physics & Simulation (4 tools):** Rigid body active/passive configuration, cloth simulation modifier, physics inspection, point cache baking.
+12. **Rendering & Compositing (5 tools):** Cycles/Eevee engine configuration, fast preview still renders to disk, render status, compositor node tree inspection & node insertion (e.g. Denoise).
+13. **AI Orchestration & Visual Intelligence (5 tools):** Multi-step task planner, master orchestrator execution loop, deterministic quality validation, and visual exposure/defect evaluation of preview renders.
+
+---
+
+## Architecture & Security
+
+```text
+MCP Client (Antigravity / Claude / Cursor)
+      │
+      ▼ (stdio)
+Python MCP Server (74 tools, Pydantic schemas, Planner, Visual Evaluator)
+      │
+      ▼ (Localhost HTTP 127.0.0.1:8765, Bearer Token Auth)
+Blender Add-on Bridge (Request Queue, Path Policy Sandbox)
+      │
+      ▼ (bpy.app.timers - Blender Main Thread)
+Blender Engine (bpy, bmesh, mathutils, Cycles/Eevee)
+```
+
+* **Thread-Safety:** `bpy` API is strictly executed on Blender's main thread via persistent timer queues.
+* **Security:** Localhost binding only (`127.0.0.1`), constant-time token validation (`hmac.compare_digest`), path traversal sandbox restricting file I/O to approved workspaces.
+* **No `eval`/`exec`:** Every single capability is an allowlisted domain operation with strict schema validation.
 
 ---
 
@@ -29,39 +56,35 @@
 
 ### 1. Setup Environment
 ```powershell
-# Create virtual environment and install dependencies
 & "C:\Program Files\Python311\python.exe" -m venv .venv
-.venv\Scripts\Activate.ps1
+.\.venv\Scripts\Activate.ps1
 pip install -e .
 pip install pytest pytest-asyncio ruff mypy
 ```
 
-### 2. Install Blender Add-on
+### 2. Install Add-on into Blender
 ```powershell
-.venv\Scripts\python.exe scripts\install_addon.py
+.\.venv\Scripts\python.exe scripts\install_addon.py
 ```
+*Or install the zip package in Blender (`Edit > Preferences > Add-ons > Install from Disk`):*
+`dist/blender_ai_control_addon-v1.0.0.zip`
 
-### 3. Verify End-to-End
+### 3. Run Automated Tests
 ```powershell
-.venv\Scripts\python.exe scripts\verify_phase1.py
-```
-
-### 4. Run Test Suite
-```powershell
-.venv\Scripts\pytest.exe -v
+.\.venv\Scripts\pytest.exe -v
 ```
 
 ---
 
 ## MCP Client Configuration
 
-To connect this server to any MCP client (such as Claude Desktop, Cursor, or Antigravity):
+Add this server to your client configuration (e.g. Claude Desktop `claude_desktop_config.json`, Cursor, or Antigravity):
 
 ```json
 {
   "mcpServers": {
     "blender": {
-      "command": "c:\\Users\\naren\\OneDrive\\Desktop\\blender MCP\\.venv\\Scripts\\python.exe",
+      "command": "C:\\Users\\naren\\OneDrive\\Desktop\\blender MCP\\.venv\\Scripts\\python.exe",
       "args": ["-m", "mcp_server.main"],
       "env": {
         "BLENDER_BRIDGE_HOST": "127.0.0.1",
@@ -76,6 +99,7 @@ To connect this server to any MCP client (such as Claude Desktop, Cursor, or Ant
 
 ## Documentation
 
+* [Tool Catalogue (All 74 Tools)](docs/tool-catalogue.md)
 * [Windows Setup Guide](docs/setup-windows.md)
 * [Bridge API Contract](docs/api-contract.md)
 * [System Architecture & Threading](docs/architecture.md)
