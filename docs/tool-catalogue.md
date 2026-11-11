@@ -1,6 +1,6 @@
 # Blender AI Control MCP — Tool Catalogue
 
-Complete reference for all 71 MCP tools exposed by the **Blender AI Control MCP Server**.
+Complete reference for all 74 MCP tools exposed by the **Blender AI Control MCP Server**.
 
 ---
 
@@ -527,3 +527,33 @@ Complete reference for all 71 MCP tools exposed by the **Blender AI Control MCP 
   * `use_nodes` *(boolean, default true)*: Enable scene compositing nodes.
   * `add_node_type` *(string, optional)*: Node type to create.
   * `node_name` *(string, optional)*: Custom name for added node.
+
+---
+
+## 12. AI Orchestration Tools (2)
+
+### `blender_plan_task`
+* **Description:** Decompose a natural language Blender request into a structured multi-step execution plan across specialists (Modeling, Material, Lighting, Rigging, Simulation, Rendering, Quality) without executing it.
+* **Arguments:**
+  * `user_request` *(string, required)*: High-level natural language prompt.
+* **Returns:** Structured task context with plan steps, specialist assignments, and acceptance criteria.
+
+### `blender_execute_plan`
+* **Description:** Execute a multi-step task through the Master Orchestrator with sequential specialist tool execution and post-execution deterministic scene validation.
+* **Arguments:**
+  * `user_request` *(string, required)*: Task prompt to plan and execute.
+* **Returns:** Execution summary, step completion statuses, and validation check results.
+
+---
+
+## 13. Visual Intelligence Tools (1)
+
+### `blender_evaluate_visual_preview`
+* **Description:** Inspect and evaluate a rendered preview image file for dimensions, aspect ratio, exposure/luminance, and quality defects.
+* **Arguments:**
+  * `filepath` *(string, required)*: Path to rendered image (`.png` or `.jpg`).
+  * `expected_min_width` *(integer, default 100)*: Minimum acceptable width.
+  * `expected_min_height` *(integer, default 100)*: Minimum acceptable height.
+  * `min_luminance` *(float, default 0.04)*: Under-exposure threshold (detects dark/missing lighting).
+  * `max_luminance` *(float, default 0.96)*: Over-exposure threshold (detects blown out renders).
+* **Returns:** Quality verdict (`PASS`, `WARN`, `FAIL`), luminance metrics, warnings, and error list.
