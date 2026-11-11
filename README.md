@@ -2,11 +2,12 @@
 
 > Structured, secure, local-first Model Context Protocol (MCP) server and Blender add-on for AI-driven 3D workflows.
 
-[![Tests](https://img.shields.io/badge/tests-35%20passed-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/tests-42%20passed-brightgreen.svg)]()
 [![Tools](https://img.shields.io/badge/MCP%20tools-74%20registered-blue.svg)]()
 [![Blender](https://img.shields.io/badge/Blender-4.0%2B-orange.svg)]()
 [![Python](https://img.shields.io/badge/Python-3.11%2B-blue.svg)]()
 [![MCP](https://img.shields.io/badge/MCP-2.0-purple.svg)]()
+[![License](https://img.shields.io/badge/License-GPL--3.0%20%7C%20MIT-blue.svg)](LICENSE)
 
 ---
 
@@ -104,3 +105,14 @@ Add this server to your client configuration (e.g. Claude Desktop `claude_deskto
 * [Bridge API Contract](docs/api-contract.md)
 * [System Architecture & Threading](docs/architecture.md)
 * [Project Specification & Roadmap](Blender_AI_Control_MCP_Project_Context.md)
+
+---
+
+## License
+
+This project is licensed under a dual-licensing model to ensure full compliance with the Blender Foundation's licensing policies while maximizing flexibility for external MCP AI clients:
+
+* **Blender Add-on (`blender_addon/`):** Licensed under the **GNU General Public License v3.0 or later (GPL-3.0-or-later)** as required by Blender Python (`bpy`) integration.
+* **MCP Server & Client Components (`mcp_server/`, `shared/`):** Dual-licensed under the **MIT License** (via Section 7 permission exception in [`LICENSE`](LICENSE)), allowing AI developer toolchains and MCP clients (Claude, Cursor, Antigravity) to integrate without copyleft constraints.
+
+See [`LICENSE`](LICENSE) for the full text.
