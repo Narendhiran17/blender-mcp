@@ -1,10 +1,10 @@
 # Blender AI Control MCP — Tool Catalogue
 
-Complete reference for all MCP tools exposed by the **Blender AI Control MCP Server**.
+Complete reference for all 50 MCP tools exposed by the **Blender AI Control MCP Server**.
 
 ---
 
-## 1. System & Connection Tools
+## 1. System & Connection Tools (3)
 
 ### `blender_health`
 * **Description:** Check if the local Blender bridge is running and reachable.
@@ -21,7 +21,7 @@ Complete reference for all MCP tools exposed by the **Blender AI Control MCP Ser
 
 ---
 
-## 2. Scene & Collection Tools
+## 2. Scene & Collection Tools (8)
 
 ### `blender_list_scenes`
 * **Description:** List all scenes in the current project with their render engines, active cameras, and object counts.
@@ -67,7 +67,7 @@ Complete reference for all MCP tools exposed by the **Blender AI Control MCP Ser
 
 ---
 
-## 3. Object Management Tools
+## 3. Object Management Tools (10)
 
 ### `blender_create_primitive`
 * **Description:** Create a 3D primitive mesh in Blender.
@@ -144,7 +144,7 @@ Complete reference for all MCP tools exposed by the **Blender AI Control MCP Ser
 
 ---
 
-## 4. Mesh Modeling Tools
+## 4. Mesh Modeling Tools (8)
 
 ### `blender_inspect_mesh`
 * **Description:** Inspect detailed mesh topology: vertex, edge, and polygon counts, non-manifold edges/vertices, loose elements, watertightness status, and UV layers.
@@ -199,7 +199,7 @@ Complete reference for all MCP tools exposed by the **Blender AI Control MCP Ser
 
 ---
 
-## 5. Modifier Management Tools
+## 5. Modifier Management Tools (5)
 
 ### `blender_list_modifiers`
 * **Description:** List all modifiers on an object with their types, parameters, and display flags.
@@ -232,3 +232,117 @@ Complete reference for all MCP tools exposed by the **Blender AI Control MCP Ser
 * **Arguments:**
   * `object_name` *(string, required)*: Name of object.
   * `modifier_name` *(string, required)*: Name of modifier to remove.
+
+---
+
+## 6. Materials, Textures, & UV Tools (9)
+
+### `blender_list_materials`
+* **Description:** List all materials in the project or assigned to a specific object.
+* **Arguments:**
+  * `object_name` *(string, optional)*: Optional filter by object name.
+
+### `blender_create_material`
+* **Description:** Create a new Principled BSDF material.
+* **Arguments:**
+  * `name` *(string, default "NewMaterial")*: Material name.
+  * `base_color` *(float array, optional)*: `[R, G, B]` (0.0 to 1.0).
+  * `roughness` *(float, optional)*: Roughness factor (0.0 to 1.0).
+  * `metallic` *(float, optional)*: Metallic factor (0.0 to 1.0).
+  * `specular` *(float, optional)*: Specular factor.
+
+### `blender_configure_material`
+* **Description:** Configure Principled BSDF parameters (base_color, roughness, metallic, transmission, emission_color, emission_strength, alpha, ior).
+* **Arguments:**
+  * `name` *(string, required)*: Name of material to configure.
+  * `base_color`, `roughness`, `metallic`, `specular`, `transmission`, `emission_color`, `emission_strength`, `alpha`, `ior`.
+
+### `blender_assign_material`
+* **Description:** Assign a material to an object slot.
+* **Arguments:**
+  * `object_name` *(string, required)*: Target object.
+  * `material_name` *(string, required)*: Material to assign.
+  * `slot_index` *(integer, optional)*: Material slot index (default 0).
+
+### `blender_inspect_material`
+* **Description:** Inspect detailed input socket values of a material's Principled BSDF node.
+* **Arguments:**
+  * `name` *(string, required)*: Material name.
+
+### `blender_assign_image_texture`
+* **Description:** Load an image texture file and connect it to a material shader input socket (e.g. 'Base Color').
+* **Arguments:**
+  * `material_name` *(string, required)*: Material to modify.
+  * `image_path` *(string, required)*: Absolute path to image file.
+  * `target_socket` *(string, default "Base Color")*: Input socket name.
+
+### `blender_list_uv_layers`
+* **Description:** List UV layers on a mesh object.
+* **Arguments:**
+  * `name` *(string, required)*: Mesh object name.
+
+### `blender_unwrap_uv`
+* **Description:** Automatically unwrap mesh UVs using Smart UV Project, Cube, Sphere, or Cylinder projection.
+* **Arguments:**
+  * `name` *(string, required)*: Mesh object name.
+  * `method` *(string, default "SMART")*: `"SMART"`, `"CUBE"`, `"SPHERE"`, `"CYLINDER"`.
+  * `island_margin` *(float, default 0.01)*: Spacing between UV islands.
+  * `angle_limit` *(float, default 66.0)*: Smart project angle threshold in degrees.
+
+### `blender_inspect_uv`
+* **Description:** Inspect UV coverage and layer statistics on an object.
+* **Arguments:**
+  * `name` *(string, required)*: Mesh object name.
+
+---
+
+## 7. Lighting, Camera, & Environment Tools (7)
+
+### `blender_create_light`
+* **Description:** Create a light source in the scene.
+* **Arguments:**
+  * `light_type` *(string, default "POINT")*: `"POINT"`, `"SUN"`, `"SPOT"`, `"AREA"`.
+  * `name` *(string, optional)*: Light object name.
+  * `location` *(float array, default [0, 0, 5])*: `[X, Y, Z]` location.
+  * `rotation` *(float array, default [0, 0, 0])*: `[X, Y, Z]` Euler rotation.
+  * `energy` *(float, default 1000.0)*: Power in Watts.
+  * `color` *(float array, default [1, 1, 1])*: `[R, G, B]` light color.
+
+### `blender_configure_light`
+* **Description:** Configure light power, color, type, and spot beam angle.
+* **Arguments:**
+  * `name` *(string, required)*: Light object name.
+  * `energy`, `color`, `light_type`, `spot_size`.
+
+### `blender_create_camera`
+* **Description:** Create a camera object with focal length (mm) and clipping ranges.
+* **Arguments:**
+  * `name` *(string, default "Camera")*: Camera name.
+  * `location` *(float array, default [0, -5, 2])*: `[X, Y, Z]` location.
+  * `rotation` *(float array, default [1.3, 0, 0])*: `[X, Y, Z]` Euler rotation in radians.
+  * `focal_length` *(float, default 50.0)*: Lens focal length in mm.
+  * `clip_start` *(float, default 0.1)*: Near clipping plane.
+  * `clip_end` *(float, default 1000.0)*: Far clipping plane.
+  * `set_active` *(boolean, default true)*: Set as active rendering camera.
+
+### `blender_configure_camera`
+* **Description:** Configure focal length (mm) or clipping distances on an existing camera.
+* **Arguments:**
+  * `name` *(string, required)*: Camera name.
+  * `focal_length`, `clip_start`, `clip_end`.
+
+### `blender_set_active_camera`
+* **Description:** Set the specified camera as the active rendering camera for the scene.
+* **Arguments:**
+  * `name` *(string, required)*: Camera name.
+
+### `blender_configure_world`
+* **Description:** Configure world illumination (background color, strength multiplier, or HDRI environment map).
+* **Arguments:**
+  * `color` *(float array, optional)*: `[R, G, B]` background color.
+  * `strength` *(float, optional)*: Background intensity multiplier.
+  * `hdri_path` *(string, optional)*: Path to HDRI `.exr` or `.hdr` file.
+
+### `blender_inspect_environment`
+* **Description:** Inspect scene illumination: active camera, world background, and all lights in the scene.
+* **Arguments:** None

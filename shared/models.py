@@ -187,3 +187,84 @@ class ConfigureModifierArgs(BaseModel):
 class ApplyModifierArgs(BaseModel):
     object_name: str = Field(description="Name of object")
     modifier_name: str = Field(description="Name of modifier to apply")
+
+
+# Phase 4 Models
+class CreateMaterialArgs(BaseModel):
+    name: str = Field(default="NewMaterial", description="Material name")
+    base_color: Optional[Tuple[float, float, float]] = Field(default=None, description="[R, G, B] color (0.0 to 1.0)")
+    roughness: Optional[float] = Field(default=None, ge=0.0, le=1.0, description="Roughness factor (0.0 to 1.0)")
+    metallic: Optional[float] = Field(default=None, ge=0.0, le=1.0, description="Metallic factor (0.0 to 1.0)")
+    specular: Optional[float] = Field(default=None, ge=0.0, le=1.0, description="Specular intensity")
+
+
+class ConfigureMaterialArgs(BaseModel):
+    name: str = Field(description="Name of material to configure")
+    base_color: Optional[List[float]] = Field(default=None, description="[R, G, B] or [R, G, B, A] color")
+    roughness: Optional[float] = Field(default=None, ge=0.0, le=1.0)
+    metallic: Optional[float] = Field(default=None, ge=0.0, le=1.0)
+    specular: Optional[float] = Field(default=None, ge=0.0, le=1.0)
+    transmission: Optional[float] = Field(default=None, ge=0.0, le=1.0)
+    emission_color: Optional[List[float]] = Field(default=None)
+    emission_strength: Optional[float] = Field(default=None, ge=0.0)
+    alpha: Optional[float] = Field(default=None, ge=0.0, le=1.0)
+    ior: Optional[float] = Field(default=None, ge=0.0)
+
+
+class AssignMaterialArgs(BaseModel):
+    object_name: str = Field(description="Name of target object")
+    material_name: str = Field(description="Name of material to assign")
+    slot_index: Optional[int] = Field(default=None, ge=0, description="Material slot index (default: slot 0)")
+
+
+class AssignImageTextureArgs(BaseModel):
+    material_name: str = Field(description="Name of material")
+    image_path: str = Field(description="Absolute path to image texture")
+    target_socket: str = Field(default="Base Color", description="Target shader input socket")
+
+
+class UnwrapUVArgs(BaseModel):
+    name: str = Field(description="Name of mesh object to unwrap")
+    method: str = Field(default="SMART", description="Unwrap method: SMART, CUBE, SPHERE, CYLINDER")
+    island_margin: float = Field(default=0.01, ge=0.0, description="Space between UV islands")
+    angle_limit: float = Field(default=66.0, description="Angle limit for Smart UV project")
+
+
+class CreateLightArgs(BaseModel):
+    light_type: str = Field(default="POINT", description="Light type: POINT, SUN, SPOT, AREA")
+    name: Optional[str] = Field(default=None, description="Name for light object")
+    location: Tuple[float, float, float] = Field(default=(0.0, 0.0, 5.0), description="[X, Y, Z] world location")
+    rotation: Tuple[float, float, float] = Field(default=(0.0, 0.0, 0.0), description="[X, Y, Z] Euler rotation")
+    energy: float = Field(default=1000.0, description="Energy in Watts (or Sun lux)")
+    color: Tuple[float, float, float] = Field(default=(1.0, 1.0, 1.0), description="[R, G, B] light color")
+
+
+class ConfigureLightArgs(BaseModel):
+    name: str = Field(description="Name of light object")
+    energy: Optional[float] = Field(default=None, ge=0.0)
+    color: Optional[List[float]] = Field(default=None)
+    light_type: Optional[str] = Field(default=None)
+    spot_size: Optional[float] = Field(default=None, description="Spot beam angle in degrees")
+
+
+class CreateCameraArgs(BaseModel):
+    name: str = Field(default="Camera", description="Name for camera object")
+    location: Tuple[float, float, float] = Field(default=(0.0, -5.0, 2.0), description="[X, Y, Z] location")
+    rotation: Tuple[float, float, float] = Field(default=(1.3, 0.0, 0.0), description="[X, Y, Z] Euler rotation in radians")
+    focal_length: float = Field(default=50.0, gt=0.0, description="Focal length in mm")
+    clip_start: float = Field(default=0.1, gt=0.0)
+    clip_end: float = Field(default=1000.0, gt=0.0)
+    set_active: bool = Field(default=True, description="Whether to make this the active scene camera")
+
+
+class ConfigureCameraArgs(BaseModel):
+    name: str = Field(description="Name of camera object")
+    focal_length: Optional[float] = Field(default=None, gt=0.0)
+    clip_start: Optional[float] = Field(default=None, gt=0.0)
+    clip_end: Optional[float] = Field(default=None, gt=0.0)
+
+
+class ConfigureWorldArgs(BaseModel):
+    color: Optional[List[float]] = Field(default=None, description="[R, G, B] background illumination color")
+    strength: Optional[float] = Field(default=None, ge=0.0, description="Background illumination intensity")
+    hdri_path: Optional[str] = Field(default=None, description="Path to HDRI environment map")
