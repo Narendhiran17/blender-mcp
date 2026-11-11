@@ -9,46 +9,15 @@ Complete reference for all MCP tools exposed by the **Blender AI Control MCP Ser
 ### `blender_health`
 * **Description:** Check if the local Blender bridge is running and reachable.
 * **Arguments:** None
-* **Returns:**
-```json
-{
-  "status": "ok",
-  "blender_connected": true,
-  "protocol_version": "1"
-}
-```
+* **Returns:** Health status and protocol version.
 
 ### `blender_status`
 * **Description:** Retrieve real-time project and scene status from Blender (version, active scene, objects count, active selection, dirty state).
 * **Arguments:** None
-* **Returns:**
-```json
-{
-  "blender_connected": true,
-  "blender_version": [4, 2, 3],
-  "blender_version_string": "4.2.3 LTS",
-  "project_filepath": null,
-  "is_saved": false,
-  "is_dirty": true,
-  "active_scene": "Scene",
-  "objects_count": 4,
-  "active_object": "Phase1_Proof_Cube",
-  "selected_objects": ["Phase1_Proof_Cube"],
-  "render_engine": "BLENDER_EEVEE_NEXT"
-}
-```
 
 ### `blender_version`
 * **Description:** Get Blender version and build platform information.
 * **Arguments:** None
-* **Returns:**
-```json
-{
-  "version": [4, 2, 3],
-  "version_string": "4.2.3 LTS",
-  "build_platform": "win32"
-}
-```
 
 ---
 
@@ -57,42 +26,11 @@ Complete reference for all MCP tools exposed by the **Blender AI Control MCP Ser
 ### `blender_list_scenes`
 * **Description:** List all scenes in the current project with their render engines, active cameras, and object counts.
 * **Arguments:** None
-* **Returns:**
-```json
-{
-  "total": 1,
-  "scenes": [
-    {
-      "name": "Scene",
-      "is_active": true,
-      "render_engine": "BLENDER_EEVEE_NEXT",
-      "active_camera": "Camera",
-      "objects_count": 3,
-      "unit_system": "METRIC"
-    }
-  ],
-  "active_scene": "Scene"
-}
-```
 
 ### `blender_inspect_scene`
 * **Description:** Inspect detailed configuration of a scene (resolution, FPS, active camera, render engine, units, collections).
 * **Arguments:**
   * `name` *(string, optional)*: Name of the scene (defaults to active scene).
-* **Returns:**
-```json
-{
-  "name": "Scene",
-  "is_active": true,
-  "render_engine": "BLENDER_EEVEE_NEXT",
-  "resolution_x": 1920,
-  "resolution_y": 1080,
-  "fps": 24,
-  "active_camera": "Camera",
-  "objects_count": 3,
-  "root_collections": []
-}
-```
 
 ### `blender_create_scene`
 * **Description:** Create a new scene in the project.
@@ -203,3 +141,94 @@ Complete reference for all MCP tools exposed by the **Blender AI Control MCP Ser
   * `select` *(boolean, default true)*: Select or deselect.
   * `deselect_others` *(boolean, default false)*: Clear other selections.
   * `set_active` *(boolean, default true)*: Set as active object in context.
+
+---
+
+## 4. Mesh Modeling Tools
+
+### `blender_inspect_mesh`
+* **Description:** Inspect detailed mesh topology: vertex, edge, and polygon counts, non-manifold edges/vertices, loose elements, watertightness status, and UV layers.
+* **Arguments:**
+  * `name` *(string, required)*: Mesh object name.
+
+### `blender_subdivide_mesh`
+* **Description:** Subdivide mesh faces and edges by a specified number of cuts and smoothness.
+* **Arguments:**
+  * `name` *(string, required)*: Mesh object name.
+  * `cuts` *(integer, default 1)*: Number of cuts.
+  * `smoothness` *(float, default 0.0)*: Smoothness factor (0.0 to 1.0).
+
+### `blender_bevel_mesh`
+* **Description:** Bevel edges or vertices of a mesh object.
+* **Arguments:**
+  * `name` *(string, required)*: Mesh object name.
+  * `offset` *(float, default 0.1)*: Bevel width.
+  * `segments` *(integer, default 1)*: Number of bevel segments.
+  * `affect` *(string, default "EDGES")*: `"EDGES"` or `"VERTICES"`.
+
+### `blender_extrude_mesh`
+* **Description:** Extrude faces of a mesh along a direction vector by a given distance.
+* **Arguments:**
+  * `name` *(string, required)*: Mesh object name.
+  * `direction` *(float array, default [0, 0, 1])*: Direction vector `[X, Y, Z]`.
+  * `distance` *(float, default 1.0)*: Distance to extrude.
+  * `face_indices` *(integer array, optional)*: Specific face indices to extrude (defaults to all).
+
+### `blender_merge_vertices`
+* **Description:** Merge vertices within a distance threshold (remove doubles).
+* **Arguments:**
+  * `name` *(string, required)*: Mesh object name.
+  * `distance` *(float, default 0.0001)*: Merge threshold distance.
+
+### `blender_recalculate_normals`
+* **Description:** Recalculate mesh face normals consistently outward or inward.
+* **Arguments:**
+  * `name` *(string, required)*: Mesh object name.
+  * `inside` *(boolean, default false)*: Whether to invert normals inward.
+
+### `blender_shade_smooth`
+* **Description:** Set smooth shading or flat faceted shading on mesh polygons.
+* **Arguments:**
+  * `name` *(string, required)*: Mesh object name.
+  * `smooth` *(boolean, default true)*: Enable smooth shading (True) or flat shading (False).
+
+### `blender_validate_mesh`
+* **Description:** Comprehensive mesh validation: checks non-manifold edges/vertices, loose geometry, zero-area faces, and watertightness for export or 3D printing.
+* **Arguments:**
+  * `name` *(string, required)*: Mesh object name.
+
+---
+
+## 5. Modifier Management Tools
+
+### `blender_list_modifiers`
+* **Description:** List all modifiers on an object with their types, parameters, and display flags.
+* **Arguments:**
+  * `object_name` *(string, required)*: Name of object.
+
+### `blender_add_modifier`
+* **Description:** Add a modifier to an object (e.g. `'SUBSURF'`, `'BEVEL'`, `'SOLIDIFY'`, `'MIRROR'`, `'ARRAY'`, `'BOOLEAN'`, `'DECIMATE'`, `'REMESH'`).
+* **Arguments:**
+  * `object_name` *(string, required)*: Name of object.
+  * `modifier_type` *(string, required)*: Modifier type enum.
+  * `name` *(string, optional)*: Custom name for modifier.
+  * `properties` *(object, optional)*: Initial properties (e.g. `{"levels": 2, "thickness": 0.2}`).
+
+### `blender_configure_modifier`
+* **Description:** Update settings on an existing modifier.
+* **Arguments:**
+  * `object_name` *(string, required)*: Name of object.
+  * `modifier_name` *(string, required)*: Modifier name.
+  * `properties` *(object, required)*: Property key-values to configure.
+
+### `blender_apply_modifier`
+* **Description:** Permanently bake/apply a modifier into the object's mesh geometry.
+* **Arguments:**
+  * `object_name` *(string, required)*: Name of object.
+  * `modifier_name` *(string, required)*: Name of modifier to apply.
+
+### `blender_remove_modifier`
+* **Description:** Remove a modifier from an object's stack.
+* **Arguments:**
+  * `object_name` *(string, required)*: Name of object.
+  * `modifier_name` *(string, required)*: Name of modifier to remove.

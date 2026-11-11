@@ -6,6 +6,8 @@ from mcp.server.mcpserver import MCPServer
 from mcp_server.config import settings
 from mcp_server.prompts import register_prompts
 from mcp_server.resources import register_resources
+from mcp_server.tools.mesh import register_mesh_tools
+from mcp_server.tools.modifiers import register_modifier_tools
 from mcp_server.tools.objects import register_object_tools
 from mcp_server.tools.scene import register_scene_tools
 from mcp_server.tools.system import register_system_tools
@@ -28,6 +30,8 @@ def create_server() -> MCPServer:
     register_system_tools(server)
     register_scene_tools(server)
     register_object_tools(server)
+    register_mesh_tools(server)
+    register_modifier_tools(server)
     register_resources(server)
     register_prompts(server)
 

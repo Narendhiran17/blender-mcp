@@ -133,3 +133,57 @@ class LinkCollectionArgs(BaseModel):
     object_name: str = Field(description="Name of object to link")
     collection_name: str = Field(description="Target collection name")
     unlink_from_others: bool = Field(default=False, description="Whether to remove object from all other collections")
+
+
+# Phase 3 Models
+class SubdivideMeshArgs(BaseModel):
+    name: str = Field(description="Name of mesh object to subdivide")
+    cuts: int = Field(default=1, ge=1, description="Number of cuts across edges")
+    smoothness: float = Field(default=0.0, ge=0.0, le=1.0, description="Smoothness factor between 0.0 and 1.0")
+
+
+class BevelMeshArgs(BaseModel):
+    name: str = Field(description="Name of mesh object to bevel")
+    offset: float = Field(default=0.1, gt=0.0, description="Bevel width/amount")
+    segments: int = Field(default=1, ge=1, description="Number of bevel segments")
+    affect: str = Field(default="EDGES", description="Whether to bevel EDGES or VERTICES")
+
+
+class ExtrudeMeshArgs(BaseModel):
+    name: str = Field(description="Name of mesh object to extrude")
+    direction: Tuple[float, float, float] = Field(default=(0.0, 0.0, 1.0), description="[X, Y, Z] extrusion direction")
+    distance: float = Field(default=1.0, description="Extrusion distance")
+    face_indices: Optional[List[int]] = Field(default=None, description="Optional specific face indices to extrude")
+
+
+class MergeMeshArgs(BaseModel):
+    name: str = Field(description="Name of mesh object")
+    distance: float = Field(default=0.0001, ge=0.0, description="Merge threshold distance")
+
+
+class RecalculateNormalsArgs(BaseModel):
+    name: str = Field(description="Name of mesh object")
+    inside: bool = Field(default=False, description="Recalculate inward (True) or outward (False)")
+
+
+class ShadeSmoothArgs(BaseModel):
+    name: str = Field(description="Name of mesh object")
+    smooth: bool = Field(default=True, description="Enable smooth shading (True) or flat shading (False)")
+
+
+class AddModifierArgs(BaseModel):
+    object_name: str = Field(description="Name of object")
+    modifier_type: str = Field(description="Type of modifier (e.g. SUBSURF, BEVEL, SOLIDIFY, MIRROR, ARRAY, BOOLEAN)")
+    name: Optional[str] = Field(default=None, description="Custom name for modifier")
+    properties: Dict[str, Any] = Field(default_factory=dict, description="Initial property values for the modifier")
+
+
+class ConfigureModifierArgs(BaseModel):
+    object_name: str = Field(description="Name of object")
+    modifier_name: str = Field(description="Name of modifier to configure")
+    properties: Dict[str, Any] = Field(description="Dictionary of property key-values to update")
+
+
+class ApplyModifierArgs(BaseModel):
+    object_name: str = Field(description="Name of object")
+    modifier_name: str = Field(description="Name of modifier to apply")

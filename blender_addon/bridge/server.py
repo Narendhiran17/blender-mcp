@@ -28,6 +28,7 @@ class BridgeRequestHandler(http.server.BaseHTTPRequestHandler):
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(payload)))
         self.send_header("Access-Control-Allow-Origin", "http://127.0.0.1")
+        self.send_header("Connection", "close")
         self.end_headers()
         self.wfile.write(payload)
 
@@ -107,6 +108,16 @@ class BridgeRequestHandler(http.server.BaseHTTPRequestHandler):
     def do_POST(self) -> None:
         path = self.path.split("?")[0].rstrip("/")
 
+        # Drain body to avoid connection reset issues on client
+        content_length = int(self.headers.get("Content-Length", 0))
+        if content_length > 10 * 1024 * 1024:
+            self._send_json_response(413, {
+                "error": {"code": "PAYLOAD_TOO_LARGE", "message": "Payload exceeds 10MB limit"}
+            })
+            return
+
+        raw_body = self.rfile.read(content_length).decode("utf-8") if content_length > 0 else ""
+
         if path != "/execute":
             self._send_json_response(404, {
                 "error": {"code": "NOT_FOUND", "message": f"Endpoint '{self.path}' not found"}
@@ -126,16 +137,8 @@ class BridgeRequestHandler(http.server.BaseHTTPRequestHandler):
             })
             return
 
-        content_length = int(self.headers.get("Content-Length", 0))
-        if content_length > 10 * 1024 * 1024:
-            self._send_json_response(413, {
-                "error": {"code": "PAYLOAD_TOO_LARGE", "message": "Payload exceeds 10MB limit"}
-            })
-            return
-
-        raw_body = self.rfile.read(content_length).decode("utf-8")
         try:
-            body = json.loads(raw_body)
+            body = json.loads(raw_body) if raw_body else {}
         except Exception as exc:
             self._send_json_response(400, {
                 "protocol_version": "1",
