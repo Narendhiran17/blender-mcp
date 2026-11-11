@@ -1,34 +1,93 @@
-# Virtual environment
+# ==============================================================================
+# Python & Virtual Environments
+# ==============================================================================
 .venv/
 env/
 venv/
 ENV/
+env.bak/
+venv.bak/
 
-# Python cache
+# Byte-code & caches
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
+.Python
+
+# Packaging & Build
+build/
+dist/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+parts/
+var/
+sdist/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Testing, Linting & Type Checking
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.coverage
+.coverage.*
+nosetests.xml
+coverage.xml
+htmlcov/
+.tox/
+.cache
 
-# Environment and secrets
-.env
-.env.local
-*.token
-
-# Blender temporary files
+# ==============================================================================
+# Blender Runtime & Project Backups
+# ==============================================================================
+# Blender auto-save backups
 *.blend1
 *.blend2
+*.blend@
 *.crash.txt
 *.log
 
-# Build / distribution
-dist/
-build/
-*.egg-info/
+# Bridge auth tokens & local config caches
+*.token
+bridge_token
+.blender_ai_control/
+.env
+.env.local
+.env.*.local
 
-# IDE / Editor
+# Temporary renders and test outputs
+test_render.png
+blender_preview_*.png
+test_output/
+tmp/
+temp/
+*.tmp
+
+# ==============================================================================
+# IDEs, Editors & OS Files
+# ==============================================================================
+# Visual Studio Code
 .vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# JetBrains (PyCharm / IntelliJ)
 .idea/
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
