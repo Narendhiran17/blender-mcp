@@ -13,6 +13,9 @@ from mcp_server.tools.modifiers import register_modifier_tools
 from mcp_server.tools.objects import register_object_tools
 from mcp_server.tools.scene import register_scene_tools
 from mcp_server.tools.system import register_system_tools
+from mcp_server.tools.geometry_nodes import register_geometry_nodes_tools
+from mcp_server.tools.rigging import register_rigging_tools
+from mcp_server.tools.animation import register_animation_tools
 
 logging.basicConfig(
     level=getattr(logging, settings.log_level.upper(), logging.INFO),
@@ -36,6 +39,9 @@ def create_server() -> MCPServer:
     register_modifier_tools(server)
     register_material_tools(server)
     register_lighting_tools(server)
+    register_geometry_nodes_tools(server)
+    register_rigging_tools(server)
+    register_animation_tools(server)
     register_resources(server)
     register_prompts(server)
 

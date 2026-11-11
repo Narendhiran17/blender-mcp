@@ -268,3 +268,85 @@ class ConfigureWorldArgs(BaseModel):
     color: Optional[List[float]] = Field(default=None, description="[R, G, B] background illumination color")
     strength: Optional[float] = Field(default=None, ge=0.0, description="Background illumination intensity")
     hdri_path: Optional[str] = Field(default=None, description="Path to HDRI environment map")
+
+
+# Phase 5: Geometry Nodes
+class InspectGeometryNodesArgs(BaseModel):
+    object_name: Optional[str] = Field(default=None, description="Optional name of object with GeometryNodes modifier")
+    modifier_name: Optional[str] = Field(default="GeometryNodes", description="Modifier name on object")
+    group_name: Optional[str] = Field(default=None, description="Direct name of node group to inspect")
+
+
+class AssignGeometryNodesArgs(BaseModel):
+    object_name: str = Field(description="Target object name")
+    group_name: Optional[str] = Field(default=None, description="Existing or new node group name")
+    modifier_name: str = Field(default="GeometryNodes", description="Name for the modifier")
+    create_if_missing: bool = Field(default=True, description="Create a new GeometryNodeTree if group_name is not found")
+
+
+class ConfigureGeometryNodesArgs(BaseModel):
+    object_name: str = Field(description="Target object name")
+    modifier_name: str = Field(default="GeometryNodes", description="Modifier name on object")
+    inputs: Dict[str, Any] = Field(description="Dictionary of input socket names or identifiers and their values")
+
+
+# Phase 5: Armatures & Rigging
+class CreateArmatureArgs(BaseModel):
+    name: str = Field(default="Armature", description="Name for the armature object")
+    location: Tuple[float, float, float] = Field(default=(0.0, 0.0, 0.0), description="[X, Y, Z] world location")
+    rotation: Tuple[float, float, float] = Field(default=(0.0, 0.0, 0.0), description="[X, Y, Z] Euler rotation in radians")
+    scale: Tuple[float, float, float] = Field(default=(1.0, 1.0, 1.0), description="[X, Y, Z] scale multipliers")
+    initial_bone_name: Optional[str] = Field(default="Root", description="Optional initial bone name")
+    initial_bone_head: Tuple[float, float, float] = Field(default=(0.0, 0.0, 0.0), description="[X, Y, Z] root bone head")
+    initial_bone_tail: Tuple[float, float, float] = Field(default=(0.0, 0.0, 1.0), description="[X, Y, Z] root bone tail")
+
+
+class InspectArmatureArgs(BaseModel):
+    name: str = Field(description="Name of armature object to inspect")
+
+
+class AddBoneArgs(BaseModel):
+    armature_name: str = Field(description="Name of armature object")
+    bone_name: str = Field(description="Name for new bone")
+    head: Tuple[float, float, float] = Field(default=(0.0, 0.0, 0.0), description="[X, Y, Z] head position in local space")
+    tail: Tuple[float, float, float] = Field(default=(0.0, 0.0, 1.0), description="[X, Y, Z] tail position in local space")
+    parent_bone: Optional[str] = Field(default=None, description="Optional parent bone name")
+    use_connect: bool = Field(default=False, description="Whether bone head is connected to parent tail")
+    roll: float = Field(default=0.0, description="Bone roll angle in radians")
+
+
+class ParentMeshToArmatureArgs(BaseModel):
+    mesh_object_name: str = Field(description="Name of mesh object to parent")
+    armature_object_name: str = Field(description="Name of armature object")
+    parent_type: str = Field(
+        default="ARMATURE_AUTO",
+        description="Parenting type: ARMATURE_AUTO (with automatic weights), ARMATURE_ENVELOPE, ARMATURE",
+    )
+
+
+# Phase 5: Animation & Timeline
+class CreateKeyframeArgs(BaseModel):
+    object_name: str = Field(description="Target object name")
+    data_path: str = Field(default="location", description="Animatable property path (e.g. location, rotation_euler, scale)")
+    frame: float = Field(description="Timeline frame number for the keyframe")
+    value: Optional[Any] = Field(default=None, description="Optional value to set before keyframing (float or list of floats)")
+    index: int = Field(default=-1, description="Array index for vector properties (-1 for all axes, 0 for X, 1 for Y, 2 for Z)")
+
+
+class InspectAnimationArgs(BaseModel):
+    object_name: str = Field(description="Name of object to inspect animation data for")
+
+
+class ConfigureAnimationArgs(BaseModel):
+    object_name: str = Field(description="Target object name")
+    data_path: Optional[str] = Field(default=None, description="Filter fcurves by data_path")
+    interpolation: Optional[str] = Field(default=None, description="Interpolation mode: BEZIER, LINEAR, CONSTANT")
+    clear_all: bool = Field(default=False, description="Clear all animation data from the object")
+    delete_frame: Optional[float] = Field(default=None, description="Delete keyframes at specified frame number")
+
+
+class PlaybackRangeArgs(BaseModel):
+    frame_start: Optional[int] = Field(default=None, description="Start frame of playback")
+    frame_end: Optional[int] = Field(default=None, description="End frame of playback")
+    frame_current: Optional[int] = Field(default=None, description="Current playhead frame")
+    fps: Optional[int] = Field(default=None, description="Playback frames per second")

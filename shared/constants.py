@@ -76,3 +76,19 @@ OP_CAMERA_CONFIGURE = "camera.configure"
 OP_CAMERA_SET_ACTIVE = "camera.set_active"
 OP_WORLD_CONFIGURE = "world.configure"
 OP_ENVIRONMENT_INSPECT = "environment.inspect"
+
+# Phase 5 Advanced 3D Operations
+OP_GEOMETRY_NODES_LIST = "geometry_nodes.list_groups"
+OP_GEOMETRY_NODES_INSPECT = "geometry_nodes.inspect"
+OP_GEOMETRY_NODES_ASSIGN = "geometry_nodes.assign_group"
+OP_GEOMETRY_NODES_CONFIGURE = "geometry_nodes.configure"
+
+OP_ARMATURE_CREATE = "armature.create"
+OP_ARMATURE_INSPECT = "armature.inspect"
+OP_ARMATURE_ADD_BONE = "armature.add_bone"
+OP_RIG_PARENT_MESH = "rig.parent_mesh"
+
+OP_ANIMATION_CREATE_KEYFRAME = "animation.create_keyframe"
+OP_ANIMATION_INSPECT = "animation.inspect"
+OP_ANIMATION_CONFIGURE = "animation.configure"
+OP_ANIMATION_PLAYBACK_RANGE = "animation.playback_range"

@@ -1,6 +1,6 @@
 # Blender AI Control MCP — Tool Catalogue
 
-Complete reference for all 50 MCP tools exposed by the **Blender AI Control MCP Server**.
+Complete reference for all 62 MCP tools exposed by the **Blender AI Control MCP Server**.
 
 ---
 
@@ -346,3 +346,108 @@ Complete reference for all 50 MCP tools exposed by the **Blender AI Control MCP 
 ### `blender_inspect_environment`
 * **Description:** Inspect scene illumination: active camera, world background, and all lights in the scene.
 * **Arguments:** None
+
+---
+
+## 7. Geometry Nodes Tools (4)
+
+### `blender_list_geometry_node_groups`
+* **Description:** List all Geometry Node groups in the active Blender project with user counts and input/output socket names.
+* **Arguments:** None
+* **Returns:** List of node groups with socket signatures.
+
+### `blender_inspect_geometry_nodes`
+* **Description:** Inspect a Geometry Nodes modifier on an object or a node group directly (socket signatures, default values, current modifier overrides, node types).
+* **Arguments:**
+  * `object_name` *(string, optional)*: Object with modifier.
+  * `modifier_name` *(string, default "GeometryNodes")*: Modifier name on object.
+  * `group_name` *(string, optional)*: Node group name.
+
+### `blender_assign_geometry_nodes`
+* **Description:** Assign a Geometry Nodes modifier to an object, optionally linking an existing node group or creating a new passthrough node tree.
+* **Arguments:**
+  * `object_name` *(string, required)*: Target object.
+  * `group_name` *(string, optional)*: Group name to assign or create.
+  * `modifier_name` *(string, default "GeometryNodes")*: Modifier name.
+  * `create_if_missing` *(boolean, default true)*: Create new node tree if not found.
+
+### `blender_configure_geometry_nodes`
+* **Description:** Configure input socket parameter values of a Geometry Nodes modifier on an object.
+* **Arguments:**
+  * `object_name` *(string, required)*: Target object.
+  * `inputs` *(object, required)*: Key-value map of socket names or identifiers to values.
+  * `modifier_name` *(string, default "GeometryNodes")*: Modifier name.
+
+---
+
+## 8. Armatures & Rigging Tools (4)
+
+### `blender_create_armature`
+* **Description:** Create an Armature object in Blender, optionally with an initial root bone.
+* **Arguments:**
+  * `name` *(string, default "Armature")*: Armature name.
+  * `location` *(float array, optional)*: `[X, Y, Z]` world position.
+  * `rotation` *(float array, optional)*: `[X, Y, Z]` Euler rotation in radians.
+  * `scale` *(float array, optional)*: `[X, Y, Z]` scale.
+  * `initial_bone_name` *(string, optional, default "Root")*: First bone name.
+  * `initial_bone_head` *(float array, default [0, 0, 0])*: Root bone head.
+  * `initial_bone_tail` *(float array, default [0, 0, 1])*: Root bone tail.
+
+### `blender_inspect_armature`
+* **Description:** Inspect bone hierarchy, head/tail coordinates, lengths, connected flags, and parent relationships of an Armature.
+* **Arguments:**
+  * `name` *(string, required)*: Armature object name.
+
+### `blender_add_bone`
+* **Description:** Add a new bone to an existing armature in edit mode with head/tail positions, roll, and parent linkage.
+* **Arguments:**
+  * `armature_name` *(string, required)*: Armature object name.
+  * `bone_name` *(string, required)*: Name of new bone.
+  * `head` *(float array, default [0, 0, 0])*: Local head coordinates.
+  * `tail` *(float array, default [0, 0, 1])*: Local tail coordinates.
+  * `parent_bone` *(string, optional)*: Parent bone name.
+  * `use_connect` *(boolean, default false)*: Connect head to parent tail.
+  * `roll` *(float, default 0.0)*: Bone roll angle in radians.
+
+### `blender_parent_mesh_to_armature`
+* **Description:** Parent a mesh object to an armature with automatic weights skinning and modifier setup.
+* **Arguments:**
+  * `mesh_object_name` *(string, required)*: Mesh object name.
+  * `armature_object_name` *(string, required)*: Armature object name.
+  * `parent_type` *(string, default "ARMATURE_AUTO")*: `"ARMATURE_AUTO"`, `"ARMATURE_ENVELOPE"`, or `"ARMATURE"`.
+
+---
+
+## 9. Animation & Timeline Tools (4)
+
+### `blender_create_keyframe`
+* **Description:** Insert a keyframe on an object for a data property (`location`, `rotation_euler`, `scale`) at a specified timeline frame.
+* **Arguments:**
+  * `object_name` *(string, required)*: Target object.
+  * `frame` *(float, required)*: Timeline frame number.
+  * `data_path` *(string, default "location")*: Property to animate.
+  * `value` *(float or float array, optional)*: Value to set before keyframing.
+  * `index` *(integer, default -1)*: Array index (-1 for all axes, 0 for X, 1 for Y, 2 for Z).
+
+### `blender_inspect_animation`
+* **Description:** Inspect active action, F-Curves, keyframe points (frame, value, interpolation), and frame range on an object.
+* **Arguments:**
+  * `object_name` *(string, required)*: Target object.
+
+### `blender_configure_animation`
+* **Description:** Configure keyframe interpolation (`"BEZIER"`, `"LINEAR"`, `"CONSTANT"`), delete keyframes at a frame, or clear all animation data.
+* **Arguments:**
+  * `object_name` *(string, required)*: Target object.
+  * `data_path` *(string, optional)*: Filter by property data path.
+  * `interpolation` *(string, optional)*: `"BEZIER"`, `"LINEAR"`, or `"CONSTANT"`.
+  * `clear_all` *(boolean, default false)*: Clear animation data completely.
+  * `delete_frame` *(float, optional)*: Delete keyframes at frame number.
+
+### `blender_playback_range`
+* **Description:** Inspect or configure the scene timeline playback range: start frame, end frame, current playhead frame, and framerate (FPS).
+* **Arguments:**
+  * `frame_start` *(integer, optional)*: Timeline start frame.
+  * `frame_end` *(integer, optional)*: Timeline end frame.
+  * `frame_current` *(integer, optional)*: Playhead frame.
+  * `fps` *(integer, optional)*: Playback frames per second.
+* **Returns:** Current timeline state, total frames, and duration in seconds.
